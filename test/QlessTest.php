@@ -14,7 +14,7 @@ abstract class QlessTest extends \PHPUnit\Framework\TestCase
     protected static $REDIS_PORT;
     protected static $REDIS_DB;
 
-    public static function setUpBeforeClass() {
+    public static function setUpBeforeClass(): void {
         self::$REDIS_HOST = getenv('REDIS_HOST') ?: 'localhost';
         self::$REDIS_PORT = getenv('REDIS_PORT') ?: 6379;
         self::$REDIS_DB   = getenv('REDIS_DB') ?: 0;
@@ -25,11 +25,11 @@ abstract class QlessTest extends \PHPUnit\Framework\TestCase
      */
     protected $client;
 
-    public function setUp() {
+    public function setUp(): void {
         $this->client = new Qless\Client(self::$REDIS_HOST, self::$REDIS_PORT, self::$REDIS_DB);
     }
 
-    public function tearDown() {
+    public function tearDown(): void {
         $this->client->lua->flush();
     }
 }

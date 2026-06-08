@@ -1,13 +1,16 @@
 <?php
 
+use Qless\InvalidJobException;
+use Qless\JobLostException;
+use Qless\QlessException;
+
 require_once __DIR__ . '/QlessTest.php';
 
 class JobTest extends QlessTest
 {
-    /**
-     * @expectedException \Qless\JobLostException
-     */
     public function testHeartbeatForInvalidJobThrows() {
+        $this->expectException(JobLostException::class);
+
         $queue = new Qless\Queue('testQueue', $this->client);
         $this->client->config->set('heartbeat', -10);
         $this->client->config->set('grace-period', 0);
@@ -131,10 +134,9 @@ class JobTest extends QlessTest
         $this->assertEquals(['jid-1', 'jid-2'], $res);
     }
 
-    /**
-     * @expectedException \Qless\QlessException
-     */
     public function testCancelThrowsExceptionWithDependents() {
+        $this->expectException(QlessException::class);
+
         $queue = new Qless\Queue('testQueue', $this->client);
 
         $testData = ['performMethod' => 'myPerformMethod', 'payload' => 'otherData'];
@@ -217,10 +219,9 @@ class JobTest extends QlessTest
         $this->assertEquals(['nnn'], $job->getTags());
     }
 
-    /**
-     * @expectedException \Qless\InvalidJobException
-     */
     public function testThrowsInvalidJobExceptionWhenRequeuingCancelledJob() {
+        $this->expectException(InvalidJobException::class);
+
         $queue = new Qless\Queue('testQueue', $this->client);
 
         $testData = ['performMethod' => 'myPerformMethod', 'payload' => 'otherData'];

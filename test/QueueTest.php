@@ -19,7 +19,7 @@ class QueueTest extends QlessTest
 
         $testData = ['performMethod' => 'myPerformMethod', 'payload' => 'otherData'];
         $res      = $queue->put(TestWorkerImpl::class, false, $testData);
-        $this->assertRegExp('/^[[:xdigit:]]{8}-([[:xdigit:]]{4}-){3}[[:xdigit:]]{12}/', $res);
+        $this->assertMatchesRegularExpression('/^[[:xdigit:]]{8}-([[:xdigit:]]{4}-){3}[[:xdigit:]]{12}/', $res);
     }
 
     public function testPopWithNoJobs() {
@@ -64,6 +64,7 @@ class QueueTest extends QlessTest
 
         foreach ($jids as $jid) {
             $queue->put(TestWorkerImpl::class, $jid, $testData);
+            usleep(1);
         }
 
         $results = array_map(function () use ($queue) {

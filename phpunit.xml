@@ -11,36 +11,24 @@
            tests/ folder: phpunit -c <filename> ...
            Example: phpunit -c mysqlconf.xml AllTests
 -->
-<phpunit
-        backupGlobals="false"
-        backupStaticAttributes="false"
-        colors="true"
-        convertErrorsToExceptions="true"
-        convertNoticesToExceptions="true"
-        convertWarningsToExceptions="true"
-        processIsolation="false"
-        stopOnFailure="false"
-        syntaxCheck="false">
-
-    <testsuites>
-        <testsuite name="qless core">
-            <directory>./test</directory>
-        </testsuite>
-    </testsuites>
-    <logging>
-        <log type="junit" target="./tests/artifacts/phpunitout.xml"/>
-    </logging>
-
-    <groups>
-        <exclude>
-            <group>performance</group>
-        </exclude>
-    </groups>
-
-    <php>
-        <env name="REDIS_HOST" value="localhost"/>
-        <env name="REDIS_PORT" value="6379"/>
-        <env name="REDIS_DB" value="0"/>
-    </php>
-
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" backupGlobals="false" backupStaticAttributes="false" colors="true" convertErrorsToExceptions="true" convertNoticesToExceptions="true" convertWarningsToExceptions="true" processIsolation="false" stopOnFailure="false" xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.3/phpunit.xsd">
+  <coverage/>
+  <testsuites>
+    <testsuite name="qless core">
+      <directory>./test</directory>
+    </testsuite>
+  </testsuites>
+  <logging>
+    <junit outputFile="./tests/artifacts/phpunitout.xml"/>
+  </logging>
+  <groups>
+    <exclude>
+      <group>performance</group>
+    </exclude>
+  </groups>
+  <php>
+    <env name="REDIS_HOST" value="localhost"/>
+    <env name="REDIS_PORT" value="6379"/>
+    <env name="REDIS_DB" value="0"/>
+  </php>
 </phpunit>
