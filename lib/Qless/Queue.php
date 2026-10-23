@@ -2,9 +2,6 @@
 
 namespace Qless;
 
-require_once __DIR__ . '/Qless.php';
-require_once __DIR__ . '/Job.php';
-
 /**
  * @property int $heartbeat get / set the heartbeat timeout for the queue
  */

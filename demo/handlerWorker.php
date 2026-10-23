@@ -1,9 +1,7 @@
 <?php
 
-require_once '../lib/Qless/Worker.php';
-require_once '../lib/Qless/Queue.php';
-require_once '../lib/Qless/Client.php';
-require_once 'TestWorkerImpl.php';
+require __DIR__ . '/../vendor/autoload.php';
+require __DIR__ . '/TestWorkerImpl.php';
 
 class JobHandler
 {

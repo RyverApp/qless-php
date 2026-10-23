@@ -2,8 +2,6 @@
 
 namespace Qless;
 
-require_once __DIR__ . '/Client.php';
-
 class Resource
 {
     /**

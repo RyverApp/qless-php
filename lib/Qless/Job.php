@@ -2,8 +2,6 @@
 
 namespace Qless;
 
-require_once __DIR__ . '/QlessException.php';
-
 class Job
 {
     /**

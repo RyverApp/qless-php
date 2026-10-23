@@ -1,7 +1,5 @@
 <?php
 
-require_once __DIR__ . '/../lib/Qless/Lua.php';
-
 class LuaTester extends \Qless\Lua
 {
     public $time = 0;

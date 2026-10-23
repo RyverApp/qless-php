@@ -2,11 +2,6 @@
 
 namespace Qless;
 
-require_once __DIR__ . '/Lua.php';
-require_once __DIR__ . '/Config.php';
-require_once __DIR__ . '/Resource.php';
-require_once __DIR__ . '/Jobs.php';
-
 /**
  * Call commands in the qless-core lua script
  *

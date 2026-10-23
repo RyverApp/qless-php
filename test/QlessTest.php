@@ -1,8 +1,5 @@
 <?php
 
-require_once __DIR__ . '/../lib/Qless/Client.php';
-require_once __DIR__ . '/../lib/Qless/Queue.php';
-require_once __DIR__ . '/../lib/Qless/Jobs.php';
 require_once __DIR__ . '/LuaTester.php';
 
 /**
