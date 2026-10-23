@@ -61,7 +61,8 @@ class Job
      */
     private $job_data;
 
-    public function __construct(Client $client, $job_data) {
+    public function __construct(Client $client, $job_data)
+    {
         $this->client      = $client;
         $this->jid         = $job_data['jid'];
         $this->klass_name  = $job_data['klass'];
@@ -80,11 +81,13 @@ class Job
      *
      * @return Job
      */
-    public static function fromJobData(Client $client, $job_data) {
+    public static function fromJobData(Client $client, $job_data)
+    {
         return new Job($client, $job_data);
     }
 
-    public function getId() {
+    public function getId()
+    {
         return $this->jid;
     }
 
@@ -93,7 +96,8 @@ class Job
      *
      * @return float
      */
-    public function ttl() {
+    public function ttl()
+    {
         return $this->expires - microtime(true);
     }
 
@@ -102,7 +106,8 @@ class Job
      *
      * @return mixed
      */
-    public function getData() {
+    public function getData()
+    {
         return $this->data;
     }
 
@@ -111,7 +116,8 @@ class Job
      *
      * @return string
      */
-    public function getQueueName() {
+    public function getQueueName()
+    {
         return $this->job_data['queue'];
     }
 
@@ -120,7 +126,8 @@ class Job
      *
      * @return string[]
      */
-    public function getDependents() {
+    public function getDependents()
+    {
         return $this->job_data['dependents'];
     }
 
@@ -129,7 +136,8 @@ class Job
      *
      * @return string[]
      */
-    public function getDependencies() {
+    public function getDependencies()
+    {
         return $this->job_data['dependencies'];
     }
 
@@ -138,7 +146,8 @@ class Job
      *
      * @return string[]
      */
-    public function getResources() {
+    public function getResources()
+    {
         return $this->job_data['resources'];
     }
 
@@ -147,7 +156,8 @@ class Job
      *
      * @return float
      */
-    public function getInterval() {
+    public function getInterval()
+    {
         return (float)$this->job_data['interval'];
     }
 
@@ -156,7 +166,8 @@ class Job
      *
      * @return int
      */
-    public function getPriority() {
+    public function getPriority()
+    {
         return $this->priority;
     }
 
@@ -165,7 +176,8 @@ class Job
      *
      * @return int
      */
-    public function getRetriesLeft() {
+    public function getRetriesLeft()
+    {
         return $this->job_data['remaining'];
     }
 
@@ -174,7 +186,8 @@ class Job
      *
      * @return int
      */
-    public function getOriginalRetries() {
+    public function getOriginalRetries()
+    {
         return $this->job_data['retries'];
     }
 
@@ -183,7 +196,8 @@ class Job
      *
      * @return string
      */
-    public function getWorkerName() {
+    public function getWorkerName()
+    {
         return $this->job_data['worker'];
     }
 
@@ -192,7 +206,8 @@ class Job
      *
      * @return array
      */
-    public function getHistory() {
+    public function getHistory()
+    {
         return $this->job_data['history'];
     }
 
@@ -201,7 +216,8 @@ class Job
      *
      * @return string
      */
-    public function getState() {
+    public function getState()
+    {
         return $this->job_data['state'];
     }
 
@@ -210,7 +226,8 @@ class Job
      *
      * @return string[]
      */
-    public function getTags() {
+    public function getTags()
+    {
         return $this->tags;
     }
 
@@ -221,7 +238,8 @@ class Job
      *
      * @return string[] the new list of tags
      */
-    public function tag(...$tags) {
+    public function tag(...$tags)
+    {
         return $this->tags = json_decode($this->client->tag('add', $this->jid, ...$tags), true);
     }
 
@@ -232,7 +250,8 @@ class Job
      *
      * @return string[] the new list of tags
      */
-    public function untag(...$tags) {
+    public function untag(...$tags)
+    {
         return $this->tags = json_decode($this->client->tag('remove', $this->jid, ...$tags), true);
     }
 
@@ -241,7 +260,8 @@ class Job
      *
      * @return array
      */
-    public function getFailureInfo() {
+    public function getFailureInfo()
+    {
         return $this->job_data['failure'];
     }
 
@@ -252,7 +272,8 @@ class Job
      *
      * @return string
      */
-    public function complete($data = null) {
+    public function complete($data = null)
+    {
         if ($data !== null) {
             $this->data = $data;
             $jsonData   = json_encode($data, JSON_UNESCAPED_SLASHES);
@@ -264,7 +285,8 @@ class Job
             $this->jid,
             $this->worker_name,
             $this->queue_name,
-            $jsonData);
+            $jsonData
+        );
     }
 
     /**
@@ -284,7 +306,8 @@ class Job
      *
      * @return string
      */
-    public function requeue($opts = []) {
+    public function requeue($opts = [])
+    {
         $jsonData = json_encode($opts['data'] ?? $this->data, JSON_UNESCAPED_SLASHES);
 
         return $this->client->requeue(
@@ -294,12 +317,19 @@ class Job
             $this->klass_name,
             $jsonData,
             $opts['delay'] ?? 0,
-            'priority', $opts['priority'] ?? $this->priority,
-            'tags', json_encode($opts['tags'] ?? $this->tags, JSON_UNESCAPED_SLASHES),
-            'retries', $opts['retries'] ?? $this->getOriginalRetries(),
-            'depends', json_encode($opts['depends'] ?? $this->getDependencies(), JSON_UNESCAPED_SLASHES),
-            'resources', json_encode($opts['resources'] ?? $this->getResources(), JSON_UNESCAPED_SLASHES),
-            'interval', (float)($opts['interval'] ?? $this->getInterval()));
+            'priority',
+            $opts['priority'] ?? $this->priority,
+            'tags',
+            json_encode($opts['tags'] ?? $this->tags, JSON_UNESCAPED_SLASHES),
+            'retries',
+            $opts['retries'] ?? $this->getOriginalRetries(),
+            'depends',
+            json_encode($opts['depends'] ?? $this->getDependencies(), JSON_UNESCAPED_SLASHES),
+            'resources',
+            json_encode($opts['resources'] ?? $this->getResources(), JSON_UNESCAPED_SLASHES),
+            'interval',
+            (float)($opts['interval'] ?? $this->getInterval())
+        );
     }
 
     /**
@@ -311,14 +341,16 @@ class Job
      *
      * @return int remaining retries available
      */
-    public function retry($group, $message, $delay = 0) {
+    public function retry($group, $message, $delay = 0)
+    {
         return $this->client->retry(
             $this->jid,
             $this->queue_name,
             $this->worker_name,
             $delay,
             $group,
-            $message);
+            $message
+        );
     }
 
     /**
@@ -326,7 +358,8 @@ class Job
      *
      * @return int timestamp of the heartbeat
      */
-    public function heartbeat($data = null) {
+    public function heartbeat($data = null)
+    {
         if ($data !== null) {
             $this->data = $data;
             $jsonData   = json_encode($data, JSON_UNESCAPED_SLASHES);
@@ -344,7 +377,8 @@ class Job
      *
      * @return int
      */
-    public function cancel($dependents = false) {
+    public function cancel($dependents = false)
+    {
         if ($dependents && !empty($this->job_data['dependents'])) {
             return call_user_func_array([$this->client, 'cancel'], array_merge([$this->jid], $this->job_data['dependents']));
         }
@@ -355,7 +389,8 @@ class Job
     /**
      * Creates the instance to perform the job and calls the method on the Instance specified in the payload['performMethod'];
      */
-    public function perform() {
+    public function perform(): void
+    {
         $instance = $this->getInstance();
 
         $performMethod = $this->data['performMethod'];
@@ -370,7 +405,8 @@ class Job
      *
      * @return bool
      */
-    public function fail($group, $message, $data = null) {
+    public function fail($group, $message, $data = null)
+    {
         if ($data !== null) {
             $this->data = $data;
             $jsonData   = json_encode($data, JSON_UNESCAPED_SLASHES);
@@ -384,7 +420,8 @@ class Job
     /**
      * Timeout this job
      */
-    public function timeout() {
+    public function timeout(): void
+    {
         $this->client->timeout($this->jid);
     }
 
@@ -395,7 +432,8 @@ class Job
      * @return mixed
      * @throws \Exception
      */
-    public function getInstance() {
+    public function getInstance()
+    {
         if ($this->instance !== null) {
             return $this->instance;
         }
@@ -416,6 +454,6 @@ class Job
             throw new \Exception('Perform method ' . $this->data['performMethod'] . ' not found in job class ' . $this->klass_name . '.');
         }
 
-        return $this->instance = new $this->klass_name;;
+        return $this->instance = new $this->klass_name();
     }
 }

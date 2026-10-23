@@ -12,7 +12,8 @@ class QlessException extends \Exception
      */
     private $area;
 
-    public function __construct($message, $area = null, $code = 0, \Exception $previous = null) {
+    public function __construct($message, $area = null, $code = 0, \Exception $previous = null)
+    {
         parent::__construct($message, $code, $previous);
         $this->area = $area;
     }
@@ -22,7 +23,8 @@ class QlessException extends \Exception
      *
      * @return QlessException
      */
-    public static function createExceptionFromError($error) {
+    public static function createExceptionFromError($error)
+    {
         if (preg_match('/^ERR.*user_script:\d+:\s*(?<area>[\w.]+)\(\):\s*(?<message>.*)/', $error, $matches) > 0) {
             $area    = $matches['area'];
             $message = $matches['message'];
@@ -32,19 +34,20 @@ class QlessException extends \Exception
         }
 
         switch (true) {
-        case (stripos($message, 'does not exist') !== false):
-            return new InvalidJobException($message, $area);
+            case (stripos($message, 'does not exist') !== false):
+                return new InvalidJobException($message, $area);
 
-        case (stripos($message, 'given out to another worker') !== false):
-            return new JobLostException($message, $area);
+            case (stripos($message, 'given out to another worker') !== false):
+                return new JobLostException($message, $area);
 
-        case (stripos($message, 'not currently running') !== false):
-        default:
-            return new QlessException($message, $area);
+            case (stripos($message, 'not currently running') !== false):
+            default:
+                return new QlessException($message, $area);
         }
     }
 
-    public function getArea() {
+    public function getArea()
+    {
         return $this->area;
     }
 }

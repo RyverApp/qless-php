@@ -19,12 +19,14 @@ class JobIterator implements \IteratorAggregate, \Countable
      */
     private $page;
 
-    public function __construct(callable $pager, Client $client) {
+    public function __construct(callable $pager, Client $client)
+    {
         $this->pager  = $pager;
         $this->client = $client;
     }
 
-    public function getIterator() {
+    public function getIterator()
+    {
         $pager = $this->pager;
 
         while (true) {
@@ -37,7 +39,8 @@ class JobIterator implements \IteratorAggregate, \Countable
         }
     }
 
-    public function count() {
+    public function count()
+    {
         if (!$this->page) {
             $this->getIterator()->next();
         }

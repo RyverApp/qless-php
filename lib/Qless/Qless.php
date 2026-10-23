@@ -4,13 +4,14 @@ namespace Qless;
 
 class Qless
 {
-    const VERSION = '1.0.0';
+    public const VERSION = '1.0.0';
 
     /**
      * @return int
      * @throws \RuntimeException
      */
-    public static function fork() {
+    public static function fork()
+    {
         if (!function_exists('pcntl_fork')) {
             return -1;
         }
@@ -23,7 +24,8 @@ class Qless
         return $pid;
     }
 
-    public static function guidv4() {
+    public static function guidv4()
+    {
         $data = openssl_random_pseudo_bytes(16);
 
         $data[6] = chr(ord($data[6]) & 0x0f | 0x40); // set version to 0010

@@ -7,53 +7,58 @@ require_once __DIR__ . '/QlessTest.php';
  */
 class QueuePerformanceTest extends QlessTest
 {
-    const TEST_TIME = 2;
+    public const TEST_TIME = 2;
 
-    public function testPerfPuttingJobs() {
+    public function testPerfPuttingJobs(): void
+    {
         $queue = new Qless\Queue('testQueue', $this->client);
-        $cb    = $this->getProfilerForCallback(function ($e) use ($queue) {
+        $cb    = $this->getProfilerForCallback(function ($e) use ($queue): void {
             $queue->put(TestWorkerImpl::class, $e, []);
         });
 
         $cb(self::TEST_TIME, __METHOD__);
     }
 
-    public function testPerfPuttingThenPoppingJobs() {
+    public function testPerfPuttingThenPoppingJobs(): void
+    {
         $queue = new Qless\Queue('testQueue', $this->client);
-        $cb    = $this->getProfilerForCallback(function ($e) use ($queue) {
+        $cb    = $this->getProfilerForCallback(function ($e) use ($queue): void {
             $queue->put(TestWorkerImpl::class, $e, []);
         });
 
         $cb(self::TEST_TIME, __METHOD__);
 
-        $cb = $this->getProfilerForCallback(function ($e) use ($queue) {
+        $cb = $this->getProfilerForCallback(function ($e) use ($queue): void {
             $queue->pop('worker');
         });
         $cb(self::TEST_TIME, __METHOD__);
     }
 
-    public function testPerfDirectRedis() {
+    public function testPerfDirectRedis(): void
+    {
         $redis = new Redis();
         $redis->connect(self::$REDIS_HOST, self::$REDIS_PORT);
 
-        $cb = $this->getProfilerForCallback(function ($e) use ($redis) {
+        $cb = $this->getProfilerForCallback(function ($e) use ($redis): void {
             $redis->hSet($e, 'data', '');
         });
 
         $cb(self::TEST_TIME, __METHOD__);
     }
 
-    public function testPerfQueueLength() {
+    public function testPerfQueueLength(): void
+    {
         $queue = new Qless\Queue('testQueue', $this->client);
-        $cb    = $this->getProfilerForCallback(function ($e) use ($queue) {
+        $cb    = $this->getProfilerForCallback(function ($e) use ($queue): void {
             $queue->length();
         });
 
         $cb(self::TEST_TIME, __METHOD__);
     }
 
-    private function getProfilerForCallback(\Closure $cb) {
-        return function ($time, $message = '') use ($cb) {
+    private function getProfilerForCallback(\Closure $cb)
+    {
+        return function ($time, $message = '') use ($cb): void {
             $s = microtime(true);
             $e = microtime(true) - $s;
             $i = 0;

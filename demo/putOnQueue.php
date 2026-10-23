@@ -24,4 +24,3 @@ if ($ret) {
 } else {
     echo "failed put on queue.\n";
 }
-

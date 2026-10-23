@@ -4,13 +4,15 @@ require_once __DIR__ . '/QlessTest.php';
 
 class JobsTest extends QlessTest
 {
-    public function testItReturnsNullForInvalidJobID() {
+    public function testItReturnsNullForInvalidJobID(): void
+    {
         $j = $this->client->jobs['xxx'];
 
         $this->assertNull($j);
     }
 
-    public function testItReturnsExistingJob() {
+    public function testItReturnsExistingJob(): void
+    {
         $this->put('j-1');
         $j = $this->client->jobs['j-1'];
 
@@ -18,7 +20,8 @@ class JobsTest extends QlessTest
         $this->assertEquals('j-1', $j->getId());
     }
 
-    public function testItReturnsExistingJobsKeyedByJobIdentifier() {
+    public function testItReturnsExistingJobsKeyedByJobIdentifier(): void
+    {
         $this->put('j-1');
         $this->put('j-2');
 
@@ -28,7 +31,8 @@ class JobsTest extends QlessTest
         $this->assertArrayHasKey('j-2', $j);
     }
 
-    public function testItReturnsNoCompletedJobsWhenNoneExist() {
+    public function testItReturnsNoCompletedJobsWhenNoneExist(): void
+    {
         $this->put('j-1');
         $this->put('j-2');
 
@@ -36,7 +40,8 @@ class JobsTest extends QlessTest
         $this->assertEmpty($j);
     }
 
-    public function testItReturnsCompletedJobs() {
+    public function testItReturnsCompletedJobs(): void
+    {
         $this->put('j-1');
         $this->put('j-2');
         $q = $this->client->getQueue('q-1');
@@ -48,7 +53,8 @@ class JobsTest extends QlessTest
         $this->assertEquals(['j-1', 'j-2'], $j);
     }
 
-    public function testItReturnsFailedJobs() {
+    public function testItReturnsFailedJobs(): void
+    {
         $this->put('j-1');
         $this->put('j-2');
         $this->put('j-3');
@@ -67,7 +73,8 @@ class JobsTest extends QlessTest
     /**
      * @depends testItReturnsFailedJobs
      */
-    public function testItReturnsFailedBySpecificGroup() {
+    public function testItReturnsFailedBySpecificGroup(): void
+    {
         $this->put('j-1');
         $this->put('j-2');
         $this->put('j-3');
@@ -83,7 +90,8 @@ class JobsTest extends QlessTest
         $this->assertCount(3, $j);
     }
 
-    public function testItReturnsRunningJob() {
+    public function testItReturnsRunningJob(): void
+    {
         $this->put('j-1');
         $this->put('j-2');
 
@@ -94,7 +102,8 @@ class JobsTest extends QlessTest
         $this->assertNotNull($j);
     }
 
-    private function put($jid, $opts = []) {
+    private function put($jid, $opts = []): void
+    {
         $opts = array_merge(
             [
                 'data'     => [],
@@ -103,7 +112,9 @@ class JobsTest extends QlessTest
                 'priority' => 0,
                 'retries'  => 0,
                 'interval' => 0,
-            ], $opts);
+            ],
+            $opts
+        );
 
         $this->client->put(
             null,
@@ -112,9 +123,14 @@ class JobsTest extends QlessTest
             'k',
             json_encode($opts['data'], JSON_UNESCAPED_SLASHES),
             $opts['delay'],
-            'tags', json_encode($opts['tags'], JSON_UNESCAPED_SLASHES),
-            'priority', $opts['priority'],
-            'retries', $opts['retries'],
-            'interval', $opts['interval']);
+            'tags',
+            json_encode($opts['tags'], JSON_UNESCAPED_SLASHES),
+            'priority',
+            $opts['priority'],
+            'retries',
+            $opts['retries'],
+            'interval',
+            $opts['interval']
+        );
     }
 }

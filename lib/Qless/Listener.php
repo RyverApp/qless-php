@@ -14,7 +14,8 @@ class Listener
      */
     private $channels;
 
-    public function __construct($redisConfig, $channels) {
+    public function __construct($redisConfig, $channels)
+    {
         $this->redis = new \Redis();
         $this->redis->connect($redisConfig['host'], $redisConfig['port']);
 
@@ -26,9 +27,10 @@ class Listener
      *
      * @param callable $callback
      */
-    public function messages(callable $callback) {
+    public function messages(callable $callback): void
+    {
         try {
-            $this->redis->subscribe($this->channels, function (\Redis $redis, $channel, $data) use ($callback) {
+            $this->redis->subscribe($this->channels, function (\Redis $redis, $channel, $data) use ($callback): void {
                 $callback($channel, json_decode($data));
             });
         } catch (\RedisException $e) {
@@ -38,7 +40,8 @@ class Listener
         }
     }
 
-    public function stop() {
+    public function stop(): void
+    {
         $this->redis->unsubscribe($this->channels);
         // workaround: give the above unsubscribe a chance to fully process
         sleep(1);

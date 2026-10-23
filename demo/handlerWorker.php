@@ -7,7 +7,8 @@ require_once 'TestWorkerImpl.php';
 
 class JobHandler
 {
-    public function perform(Qless\Job $job) {
+    public function perform(Qless\Job $job): void
+    {
         echo 'Here in JobHandler perform';
         $job->perform();
     }

@@ -4,34 +4,40 @@ require_once __DIR__ . '/QlessTest.php';
 
 class ConfigTest extends QlessTest
 {
-    public function testDefaultHeartbeat() {
+    public function testDefaultHeartbeat(): void
+    {
         $val = $this->client->config->get('heartbeat');
         $this->assertEquals(60, $val);
     }
 
-    public function testDefaultGracePeriod() {
+    public function testDefaultGracePeriod(): void
+    {
         $val = $this->client->config->get('grace-period');
         $this->assertEquals(10, $val);
     }
 
-    public function testSetHeartbeat() {
+    public function testSetHeartbeat(): void
+    {
         $this->client->config->set('heartbeat', 10);
         $val = $this->client->config->get('heartbeat');
         $this->assertEquals(10, $val);
     }
 
-    public function testItUsesDefaultValueWhenConfigNotSet() {
+    public function testItUsesDefaultValueWhenConfigNotSet(): void
+    {
         $val = $this->client->config->get('__blah__', 'val');
         $this->assertEquals('val', $val);
     }
 
-    public function testItDoesSetTheConfigValue() {
+    public function testItDoesSetTheConfigValue(): void
+    {
         $this->client->config->set('__blah__', 'val');
         $val = $this->client->config->get('__blah__');
         $this->assertEquals('val', $val);
     }
 
-    public function testItDoesClearTheConfigValue() {
+    public function testItDoesClearTheConfigValue(): void
+    {
         $this->client->config->set('__blah__', 'val');
         $this->client->config->clear('__blah__');
         $val = $this->client->config->get('__blah__');

@@ -6,7 +6,8 @@ class LuaTester extends \Qless\Lua
 {
     public $time = 0;
 
-    public function run($command, $args) {
+    public function run($command, $args)
+    {
         if (empty($this->sha)) {
             $this->reload();
         }

@@ -11,7 +11,8 @@ class Config
      */
     private $client;
 
-    public function __construct(Client $client) {
+    public function __construct(Client $client)
+    {
         $this->client = $client;
     }
 
@@ -23,7 +24,8 @@ class Config
      *
      * @return string|int|bool
      */
-    public function get($name, $default = null) {
+    public function get($name, $default = null)
+    {
         $res = $this->client->lua->run('config.get', [$name]);
 
         return $res === false ? $default : $res;
@@ -35,7 +37,8 @@ class Config
      * @param string          $name
      * @param string|int|bool $value
      */
-    public function set($name, $value) {
+    public function set($name, $value): void
+    {
         $this->client->lua->run('config.set', [$name, $value]);
     }
 
@@ -44,7 +47,8 @@ class Config
      *
      * @param string $name
      */
-    public function clear($name) {
+    public function clear($name): void
+    {
         $this->client->lua->run('config.unset', [$name]);
     }
 }

@@ -34,7 +34,8 @@ class Lua
      */
     protected $sha;
 
-    public function __construct($redis) {
+    public function __construct($redis)
+    {
         $this->redisHost = $redis['host'];
         $this->redisPort = $redis['port'];
         $this->redisDb   = $redis['db'];
@@ -44,7 +45,8 @@ class Lua
         $this->redisCli->select($this->redisDb);
     }
 
-    public function run($command, $args) {
+    public function run($command, $args)
+    {
         if (empty($this->sha)) {
             $this->reload();
         }
@@ -52,7 +54,7 @@ class Lua
         $argArray = array_merge($luaArgs, $args);
         $result   = $this->redisCli->evalSha($this->sha, $argArray);
         $error    = $this->redisCli->getLastError();
-        if ($error && strpos($error, 'NOSCRIPT') === 0) {
+        if ($error && str_starts_with($error, 'NOSCRIPT')) {
             $this->redisCli->clearLastError();
             $script    = file_get_contents(__DIR__ . '/qless-core/qless.lua', true);
             $this->sha = $this->redisCli->script('load', $script);
@@ -71,12 +73,14 @@ class Lua
      *
      * @throws QlessException
      */
-    protected function handleError($error) {
+    protected function handleError($error): void
+    {
         $this->redisCli->clearLastError();
         throw QlessException::createExceptionFromError($error);
     }
 
-    protected function reload() {
+    protected function reload(): void
+    {
         $script    = file_get_contents(__DIR__ . '/qless-core/qless.lua', true);
         $this->sha = sha1($script);
         $res       = $this->redisCli->script('exists', $this->sha);
@@ -94,14 +98,16 @@ class Lua
      *
      * @internal
      */
-    public function flush() {
+    public function flush(): void
+    {
         $this->redisCli->flushDB();
     }
 
     /**
      * Reconnect to the Redis server
      */
-    public function reconnect() {
+    public function reconnect(): void
+    {
         $this->redisCli->close();
         $this->redisCli->connect($this->redisHost, $this->redisPort);
         $this->redisCli->select($this->redisDb);

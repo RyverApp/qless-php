@@ -20,7 +20,8 @@ class Queue
      */
     private $name;
 
-    public function __construct($name, Client $client) {
+    public function __construct($name, Client $client)
+    {
         $this->client = $client;
         $this->name   = $name;
     }
@@ -49,7 +50,8 @@ class Queue
      *
      * @return string|float the job identifier or the time remaining before the job expires if the job is already running
      */
-    public function put($klass, $jid, $data, $delay = 0, $retries = 5, $replace = true, $priority = 0, $resources = [], $interval = 0.0, $tags = [], $depends = []) {
+    public function put($klass, $jid, $data, $delay = 0, $retries = 5, $replace = true, $priority = 0, $resources = [], $interval = 0.0, $tags = [], $depends = [])
+    {
         return $this->client->put(
             null,
             $this->name,
@@ -57,13 +59,21 @@ class Queue
             $klass,
             json_encode($data, JSON_UNESCAPED_SLASHES),
             $delay,
-            'priority', $priority,
-            'tags', json_encode($tags, JSON_UNESCAPED_SLASHES),
-            'retries', $retries,
-            'depends', json_encode($depends, JSON_UNESCAPED_SLASHES),
-            'resources', json_encode($resources, JSON_UNESCAPED_SLASHES),
-            'replace', $replace ? 1 : 0,
-            'interval', $interval);
+            'priority',
+            $priority,
+            'tags',
+            json_encode($tags, JSON_UNESCAPED_SLASHES),
+            'retries',
+            $retries,
+            'depends',
+            json_encode($depends, JSON_UNESCAPED_SLASHES),
+            'resources',
+            json_encode($resources, JSON_UNESCAPED_SLASHES),
+            'replace',
+            $replace ? 1 : 0,
+            'interval',
+            $interval
+        );
     }
 
     /**
@@ -74,7 +84,8 @@ class Queue
      *
      * @return Job[]
      */
-    public function pop($worker, $numJobs = 1) {
+    public function pop($worker, $numJobs = 1)
+    {
         $jobs = json_decode($this->client->pop($this->name, $worker, $numJobs), true);
 
         $returnJobs = [];
@@ -106,7 +117,8 @@ class Queue
      *
      * @return mixed
      */
-    public function recur($klass, $jid, $data, $interval = 0, $offset = 0, $retries = 5, $priority = 0, $resources = [], $tags = []) {
+    public function recur($klass, $jid, $data, $interval = 0, $offset = 0, $retries = 5, $priority = 0, $resources = [], $tags = [])
+    {
         return $this->client->recur(
             $this->name,
             $jid ?: Qless::guidv4(),
@@ -115,10 +127,15 @@ class Queue
             'interval',
             $interval,
             $offset,
-            'priority', $priority,
-            'tags', json_encode($tags, JSON_UNESCAPED_SLASHES),
-            'retries', $retries,
-            'resources', json_encode($resources, JSON_UNESCAPED_SLASHES));
+            'priority',
+            $priority,
+            'tags',
+            json_encode($tags, JSON_UNESCAPED_SLASHES),
+            'retries',
+            $retries,
+            'resources',
+            json_encode($resources, JSON_UNESCAPED_SLASHES)
+        );
     }
 
     /**
@@ -128,7 +145,8 @@ class Queue
      *
      * @return int
      */
-    public function cancel($jid) {
+    public function cancel($jid)
+    {
         return $this->client->cancel($jid);
     }
 
@@ -139,7 +157,8 @@ class Queue
      *
      * @return int
      */
-    public function unrecur($jid) {
+    public function unrecur($jid)
+    {
         return $this->client->unrecur($jid);
     }
 
@@ -148,47 +167,51 @@ class Queue
      *
      * @return int
      */
-    public function length() {
+    public function length()
+    {
         return $this->client->length($this->name);
     }
 
-    public function __get($name) {
+    public function __get($name)
+    {
         switch ($name) {
-        case 'heartbeat':
-            $cfg = $this->client->config;
+            case 'heartbeat':
+                $cfg = $this->client->config;
 
-            return (int)$cfg->get("{$this->name}-heartbeat", $cfg->get('heartbeat', 60));
+                return (int)$cfg->get("{$this->name}-heartbeat", $cfg->get('heartbeat', 60));
 
-        default:
-            throw new \InvalidArgumentException("Undefined property '$name'");
+            default:
+                throw new \InvalidArgumentException("Undefined property '$name'");
         }
     }
 
-    public function __set($name, $value) {
+    public function __set($name, $value): void
+    {
         switch ($name) {
-        case 'heartbeat':
-            if (!is_int($value)) {
-                throw new \InvalidArgumentException('heartbeat must be an int');
-            }
+            case 'heartbeat':
+                if (!is_int($value)) {
+                    throw new \InvalidArgumentException('heartbeat must be an int');
+                }
 
-            $this->client->config->set("{$this->name}-heartbeat", $value);
+                $this->client->config->set("{$this->name}-heartbeat", $value);
 
-            break;
+                break;
 
-        default:
-            throw new \InvalidArgumentException("Undefined property '$name'");
+            default:
+                throw new \InvalidArgumentException("Undefined property '$name'");
         }
     }
 
-    public function __unset($name) {
+    public function __unset($name): void
+    {
         switch ($name) {
-        case 'heartbeat':
-            $this->client->config->clear("{$this->name}-heartbeat");
+            case 'heartbeat':
+                $this->client->config->clear("{$this->name}-heartbeat");
 
-            break;
+                break;
 
-        default:
-            throw new \InvalidArgumentException("Undefined property '$name'");
+            default:
+                throw new \InvalidArgumentException("Undefined property '$name'");
         }
     }
 
@@ -199,7 +222,8 @@ class Queue
      *
      * @return array
      */
-    public function stats($date = null) {
+    public function stats($date = null)
+    {
         $date = $date ?: time();
         return json_decode($this->client->stats($this->name, $date), true);
     }
@@ -207,14 +231,16 @@ class Queue
     /**
      * Pauses the queue so it will not process any more jobs
      */
-    public function pause() {
+    public function pause(): void
+    {
         $this->client->pause($this->name);
     }
 
     /**
      * Resumes the queue so it will continue processing jobs
      */
-    public function resume() {
+    public function resume(): void
+    {
         $this->client->unpause($this->name);
     }
 
@@ -223,11 +249,13 @@ class Queue
      *
      * @return bool
      */
-    public function isPaused() {
+    public function isPaused()
+    {
         return $this->client->paused($this->name) === 1;
     }
 
-    public function __toString() {
+    public function __toString()
+    {
         return $this->name;
     }
 }

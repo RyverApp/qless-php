@@ -9,7 +9,8 @@ class Jobs implements \ArrayAccess
      */
     private $client;
 
-    public function __construct(Client $client) {
+    public function __construct(Client $client)
+    {
         $this->client = $client;
     }
 
@@ -21,7 +22,8 @@ class Jobs implements \ArrayAccess
      *
      * @return string[]
      */
-    public function completed($offset = 0, $count = 25) {
+    public function completed($offset = 0, $count = 25)
+    {
         return $this->client->jobs('complete', $offset, $count);
     }
 
@@ -32,7 +34,8 @@ class Jobs implements \ArrayAccess
      *
      * @return Job|null
      */
-    public function get($jid) {
+    public function get($jid)
+    {
         return $this->offsetGet($jid);
     }
 
@@ -43,7 +46,8 @@ class Jobs implements \ArrayAccess
      *
      * @return Job[]
      */
-    public function multiget($jids) {
+    public function multiget($jids)
+    {
         if (empty($jids)) {
             return [];
         }
@@ -67,9 +71,10 @@ class Jobs implements \ArrayAccess
      *
      * @return JobIterator
      */
-    public function failedForGroup($group, $start = 0, $chunkSize = 25) {
+    public function failedForGroup($group, $start = 0, $chunkSize = 25)
+    {
         $pager = function () use ($group, &$start, $chunkSize) {
-            $res   = $this->client->failed($group, $start, $chunkSize);
+            $res = $this->client->failed($group, $start, $chunkSize);
             $start += $chunkSize;
             return $res;
         };
@@ -81,7 +86,8 @@ class Jobs implements \ArrayAccess
      *
      * @return int[]
      */
-    public function failed() {
+    public function failed()
+    {
         return json_decode($this->client->failed(), true);
     }
 
@@ -94,20 +100,23 @@ class Jobs implements \ArrayAccess
      *
      * @return JobIterator
      */
-    public function tagged($tag, $start = 0, $chunkSize = 25) {
+    public function tagged($tag, $start = 0, $chunkSize = 25)
+    {
         $pager = function () use ($tag, &$start, $chunkSize) {
-            $res   = $this->client->tag('get', $tag, $start, $chunkSize);
+            $res = $this->client->tag('get', $tag, $start, $chunkSize);
             $start += $chunkSize;
             return $res;
         };
         return new JobIterator($pager, $this->client);
     }
 
-    public function offsetExists($jid) {
+    public function offsetExists($jid)
+    {
         return $this->client->get($jid) !== false;
     }
 
-    public function offsetGet($jid) {
+    public function offsetGet($jid)
+    {
         $job_data = $this->client->get($jid);
         if ($job_data === false) {
             $job_data = $this->client->{'recur.get'}($jid);
@@ -119,11 +128,13 @@ class Jobs implements \ArrayAccess
         return new Job($this->client, json_decode($job_data, true));
     }
 
-    public function offsetSet($offset, $value) {
+    public function offsetSet($offset, $value): void
+    {
         throw new \LogicException('set not supported');
     }
 
-    public function offsetUnset($offset) {
+    public function offsetUnset($offset): void
+    {
         throw new \LogicException('unset not supported');
     }
 }
