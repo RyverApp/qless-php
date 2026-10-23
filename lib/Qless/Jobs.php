@@ -110,16 +110,16 @@ class Jobs implements \ArrayAccess
         return new JobIterator($pager, $this->client);
     }
 
-    public function offsetExists($jid)
+    public function offsetExists($jid): bool
     {
         return $this->client->get($jid) !== false;
     }
 
-    public function offsetGet($jid)
+    public function offsetGet($jid): ?Job
     {
         $job_data = $this->client->get($jid);
         if ($job_data === false) {
-            $job_data = $this->client->{'recur.get'}($jid);
+            $job_data = $this->client->call('recur.get', $jid);
             if ($job_data === false) {
                 return null;
             }

@@ -48,7 +48,7 @@ class Queue
      * @param string[] $tags      List of tags to add to the job.
      * @param string[] $depends   a list of JIDs this job must wait on before executing.
      *
-     * @return string|float the job identifier or the time remaining before the job expires if the job is already running
+     * @return string|int the job identifier or the time remaining before the job expires if the job is already running
      */
     public function put($klass, $jid, $data, $delay = 0, $retries = 5, $replace = true, $priority = 0, $resources = [], $interval = 0.0, $tags = [], $depends = [])
     {
@@ -143,7 +143,7 @@ class Queue
      *
      * @param string $jid
      *
-     * @return int
+     * @return string[]
      */
     public function cancel($jid)
     {
@@ -224,7 +224,7 @@ class Queue
      */
     public function stats($date = null)
     {
-        $date = $date ?: time();
+        $date ??= time();
         return json_decode($this->client->stats($this->name, $date), true);
     }
 

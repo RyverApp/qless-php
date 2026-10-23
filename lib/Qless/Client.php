@@ -10,30 +10,30 @@ require_once __DIR__ . '/Jobs.php';
 /**
  * Call commands in the qless-core lua script
  *
- * @method string   put(string $worker, string $queue, string $jid, string $klass, string $data, int $delay_in_seconds, mixed ...$args)
- * @method string   recur(string $queue, string $jid, string $klass, string $data, string $spec, mixed ...$args)
- * @method string   pop(string $queue, string $worker, int $count)
- * @method int      length(string $queue)
- * @method string   stats(string $queue, int $date)
- * @method int      paused(string $queue)
- * @method void     pause(string ...$queues)
- * @method void     unpause(string ...$queues)
- * @method string   requeue(string $worker, string $queue, string $jid, string $klass, string $data, int $delay_in_seconds, mixed ...$args)
- * @method int      unrecur(string $jid)
- * @method int      retry(string $jid, string $queue, string $worker, int $delay, string $group, string $message)
- * @method string[] cancel(string ...$jids)
- * @method string   get(string $jid)
- * @method string   multiget(string ...$jids)
- * @method string[] jobs(string $state, mixed ...$args)
- * @method int      heartbeat(string $jid, string $worker, string $data = null)
- * @method string   complete(string $jid, string $worker, string $queue, string $data = null, mixed ...$args)
- * @method int      fail(string $jid, string $worker, string $group, string $message, string $data = null)
- * @method void     timeout(string ...$jids)
- * @method string   tag(string $command, mixed ...$args)
- * @method string   failed(string $group = null, int $start = 0, int $limit = 25)
- * @method string   queues(string $queue = null)
+ * @method string|int   put(?string $worker, string $queue, string $jid, string $klass, string $data, int $delay_in_seconds, mixed ...$args)
+ * @method string       recur(string $queue, string $jid, string $klass, string $data, string $spec, mixed ...$args)
+ * @method string       pop(string $queue, string $worker, int $count)
+ * @method int          length(string $queue)
+ * @method string       stats(string $queue, int $date)
+ * @method int|false    paused(string $queue)
+ * @method void         pause(string ...$queues)
+ * @method void         unpause(string ...$queues)
+ * @method string       requeue(string $worker, string $queue, string $jid, string $klass, string $data, int $delay_in_seconds, mixed ...$args)
+ * @method int          unrecur(string $jid)
+ * @method int          retry(string $jid, string $queue, string $worker, int $delay, string $group, string $message)
+ * @method string[]     cancel(string ...$jids)
+ * @method string|false get(string $jid)
+ * @method string       multiget(string ...$jids)
+ * @method string[]     jobs(string $state, mixed ...$args)
+ * @method int          heartbeat(string $jid, string $worker, string $data = null)
+ * @method string       complete(string $jid, string $worker, string $queue, string $data = null, mixed ...$args)
+ * @method string       fail(string $jid, string $worker, string $group, string $message, string $data = null)
+ * @method void         timeout(string ...$jids)
+ * @method string       tag(string $command, mixed ...$args)
+ * @method string       failed(string $group = null, int $start = 0, int $limit = 25)
+ * @method string       queues(string $queue = null)
  *
- * @property-read Jobs jobs
+ * @property-read Jobs $jobs
  */
 class Client
 {

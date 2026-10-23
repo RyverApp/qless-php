@@ -37,12 +37,12 @@ class Worker
     private $workerName;
 
     /**
-     * @var int
+     * @var int|null
      */
     private $childPID;
 
     /**
-     * @var int
+     * @var int|null
      */
     private $watchdogPID;
 
@@ -72,7 +72,7 @@ class Worker
     private $logCtx;
 
     /**
-     * @var resource[]
+     * @var \Socket[]
      */
     private $sockets = [];
 
@@ -82,7 +82,7 @@ class Worker
     private $logger;
 
     /**
-     * @var Job
+     * @var Job|null
      */
     private $job;
 
@@ -294,7 +294,7 @@ class Worker
     /**
      * Forks and creates a socket pair for communication between parent and child process
      *
-     * @param resource $socket
+     * @param \Socket|null $socket
      *
      * @return int PID if master or 0 if child
      */
@@ -349,7 +349,7 @@ class Worker
     }
 
     /**
-     * @param resource $socket
+     * @param \Socket $socket
      *
      * @return null|string
      */

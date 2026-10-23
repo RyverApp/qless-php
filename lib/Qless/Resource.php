@@ -17,7 +17,7 @@ class Resource
     private $name;
 
     /**
-     * @var int
+     * @var int|null
      */
     private $max;
 

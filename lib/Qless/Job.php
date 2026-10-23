@@ -37,7 +37,7 @@ class Job
     private $worker_name;
 
     /**
-     * @var string
+     * @var mixed
      */
     private $instance;
 
@@ -375,7 +375,7 @@ class Job
      *
      * @param bool $dependents true if associated dependents should also be cancelled
      *
-     * @return int
+     * @return string[]
      */
     public function cancel($dependents = false)
     {
@@ -403,7 +403,7 @@ class Job
      * @param string $message
      * @param mixed  $data
      *
-     * @return bool
+     * @return string
      */
     public function fail($group, $message, $data = null)
     {

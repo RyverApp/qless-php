@@ -25,7 +25,7 @@ class JobIterator implements \IteratorAggregate, \Countable
         $this->client = $client;
     }
 
-    public function getIterator()
+    public function getIterator(): \Generator
     {
         $pager = $this->pager;
 
@@ -39,7 +39,7 @@ class JobIterator implements \IteratorAggregate, \Countable
         }
     }
 
-    public function count()
+    public function count(): int
     {
         if (!$this->page) {
             $this->getIterator()->next();
