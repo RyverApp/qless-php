@@ -122,6 +122,7 @@ class JobTest extends QlessTest
 
         $testData = ['performMethod' => 'myPerformMethod', 'payload' => 'otherData'];
         $queue->put(TestWorkerImpl::class, 'jid-1', $testData, 0, 0);
+        usleep(1000);
         $queue->put(TestWorkerImpl::class, 'jid-2', $testData, 0, 0);
 
         $job1 = $queue->pop('worker-1')[0];

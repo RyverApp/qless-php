@@ -66,7 +66,7 @@ class QueueTest extends QlessTest
 
         foreach ($jids as $jid) {
             $queue->put(TestWorkerImpl::class, $jid, $testData);
-            usleep(1);
+            usleep(1000);
         }
 
         $results = array_map(fn () => $queue->pop('worker')[0]->getId(), $jids);

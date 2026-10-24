@@ -1,5 +1,7 @@
 <?php
 
+use PHPUnit\Framework\Attributes\Depends;
+
 require_once __DIR__ . '/QlessTest.php';
 
 class JobsTest extends QlessTest
@@ -70,9 +72,7 @@ class JobsTest extends QlessTest
         $this->assertEquals(1, $j['main']);
     }
 
-    /**
-     * @depends testItReturnsFailedJobs
-     */
+    #[Depends('testItReturnsFailedJobs')]
     public function testItReturnsFailedBySpecificGroup(): void
     {
         $this->put('j-1');

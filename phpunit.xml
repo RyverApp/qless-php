@@ -11,11 +11,11 @@
            tests/ folder: phpunit -c <filename> ...
            Example: phpunit -c mysqlconf.xml AllTests
 -->
-<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" backupGlobals="false" backupStaticAttributes="false" colors="true" convertErrorsToExceptions="true" convertNoticesToExceptions="true" convertWarningsToExceptions="true" processIsolation="false" stopOnFailure="false" xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.3/phpunit.xsd">
-  <coverage/>
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" backupGlobals="false" colors="true" processIsolation="false" stopOnFailure="false" xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/11.5/phpunit.xsd" cacheDirectory=".phpunit.cache" backupStaticProperties="false">
   <testsuites>
     <testsuite name="qless core">
       <directory>./test</directory>
+      <exclude>./test/QlessTest.php</exclude>
     </testsuite>
   </testsuites>
   <logging>
@@ -31,4 +31,5 @@
     <env name="REDIS_PORT" value="6379"/>
     <env name="REDIS_DB" value="0"/>
   </php>
+  <source/>
 </phpunit>

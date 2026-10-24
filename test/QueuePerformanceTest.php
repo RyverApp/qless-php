@@ -1,10 +1,10 @@
 <?php
 
+use PHPUnit\Framework\Attributes\Group;
+
 require_once __DIR__ . '/QlessTest.php';
 
-/**
- * @group performance
- */
+#[Group('performance')]
 class QueuePerformanceTest extends QlessTest
 {
     public const TEST_TIME = 2;

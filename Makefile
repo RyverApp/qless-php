@@ -2,6 +2,14 @@
 deps:
 	composer install
 
+.PHONY: outdated
+outdated:
+	composer outdated -D
+
+.PHONY: upgrade
+upgrade:
+	composer update -o --no-blocking
+
 .PHONY: format
 format:
 	vendor/bin/php-cs-fixer fix
