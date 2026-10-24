@@ -59,11 +59,3 @@ class QlessException extends \Exception
         return $this->area;
     }
 }
-
-class InvalidJobException extends QlessException
-{
-}
-
-class JobLostException extends QlessException
-{
-}
