@@ -20,6 +20,10 @@ check:
 	vendor/bin/php-cs-fixer fix --dry-run --diff
 	vendor/bin/phpstan analyse
 
+.PHONY: typos
+typos:
+	typos
+
 .PHONY: test
 test:
 	php vendor/bin/phpunit
