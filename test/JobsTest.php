@@ -102,7 +102,7 @@ class JobsTest extends QlessTest
         $this->assertNotNull($j);
     }
 
-    private function put($jid, $opts = []): void
+    private function put(string $jid, $opts = []): void
     {
         $opts = array_merge(
             [

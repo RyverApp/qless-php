@@ -5,25 +5,13 @@ namespace Qless;
 /**
  * @property int $heartbeat get / set the heartbeat timeout for the queue
  */
-class Queue
+class Queue implements \Stringable
 {
-    /**
-     * @var Client
-     */
-    private $client;
-
-    /**
-     * @var string
-     */
-    private $name;
-
     /**
      * @param string $name
      */
-    public function __construct($name, Client $client)
+    public function __construct(private $name, private readonly Client $client)
     {
-        $this->client = $client;
-        $this->name   = $name;
     }
 
     /**
@@ -84,7 +72,7 @@ class Queue
      *
      * @return Job[]
      */
-    public function pop($worker, $numJobs = 1)
+    public function pop($worker, $numJobs = 1): array
     {
         $jobs = json_decode($this->client->pop($this->name, $worker, $numJobs), true);
 
@@ -185,10 +173,7 @@ class Queue
         }
     }
 
-    /**
-     * @param mixed $value
-     */
-    public function __set(string $name, $value): void
+    public function __set(string $name, mixed $value): void
     {
         switch ($name) {
             case 'heartbeat':
@@ -207,15 +192,10 @@ class Queue
 
     public function __unset(string $name): void
     {
-        switch ($name) {
-            case 'heartbeat':
-                $this->client->config->clear("{$this->name}-heartbeat");
-
-                break;
-
-            default:
-                throw new \InvalidArgumentException("Undefined property '$name'");
-        }
+        match ($name) {
+            'heartbeat' => $this->client->config->clear("{$this->name}-heartbeat"),
+            default     => throw new \InvalidArgumentException("Undefined property '$name'"),
+        };
     }
 
     /**
@@ -225,7 +205,7 @@ class Queue
      *
      * @return array<string, mixed>
      */
-    public function stats($date = null)
+    public function stats($date = null): mixed
     {
         $date ??= time();
         return json_decode($this->client->stats($this->name, $date), true);
@@ -249,15 +229,13 @@ class Queue
 
     /**
      * Specifies whether the queue is paused
-     *
-     * @return bool
      */
-    public function isPaused()
+    public function isPaused(): bool
     {
         return $this->client->paused($this->name) === 1;
     }
 
-    public function __toString()
+    public function __toString(): string
     {
         return $this->name;
     }

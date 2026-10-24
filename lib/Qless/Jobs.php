@@ -7,14 +7,8 @@ namespace Qless;
  */
 class Jobs implements \ArrayAccess
 {
-    /**
-     * @var Client
-     */
-    private $client;
-
-    public function __construct(Client $client)
+    public function __construct(private readonly Client $client)
     {
-        $this->client = $client;
     }
 
     /**
@@ -34,10 +28,8 @@ class Jobs implements \ArrayAccess
      * Return a {@see Job} instance for the specified job identifier or null if the job does not exist
      *
      * @param string $jid the job identifier to fetch
-     *
-     * @return Job|null
      */
-    public function get($jid)
+    public function get($jid): ?Job
     {
         return $this->offsetGet($jid);
     }
@@ -49,7 +41,7 @@ class Jobs implements \ArrayAccess
      *
      * @return Job[]
      */
-    public function multiget($jids)
+    public function multiget($jids): array
     {
         if (empty($jids)) {
             return [];
@@ -71,10 +63,8 @@ class Jobs implements \ArrayAccess
      * @param string $group
      * @param int    $start
      * @param int    $chunkSize
-     *
-     * @return JobIterator
      */
-    public function failedForGroup($group, $start = 0, $chunkSize = 25)
+    public function failedForGroup($group, $start = 0, $chunkSize = 25): JobIterator
     {
         $pager = function () use ($group, &$start, $chunkSize) {
             $res = $this->client->failed($group, $start, $chunkSize);
@@ -89,7 +79,7 @@ class Jobs implements \ArrayAccess
      *
      * @return int[]
      */
-    public function failed()
+    public function failed(): mixed
     {
         return json_decode($this->client->failed(), true);
     }
@@ -100,10 +90,8 @@ class Jobs implements \ArrayAccess
      * @param string $tag
      * @param int    $start
      * @param int    $chunkSize
-     *
-     * @return JobIterator
      */
-    public function tagged($tag, $start = 0, $chunkSize = 25)
+    public function tagged($tag, $start = 0, $chunkSize = 25): JobIterator
     {
         $pager = function () use ($tag, &$start, $chunkSize) {
             $res = $this->client->tag('get', $tag, $start, $chunkSize);

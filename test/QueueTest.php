@@ -46,7 +46,7 @@ class QueueTest extends QlessTest
     {
         $queue    = new Qless\Queue('testQueue', $this->client);
         $testData = ['performMethod' => 'myPerformMethod', 'payload' => 'otherData'];
-        $jids     = array_map(fn ($i) => "jid-$i", range(1, 10));
+        $jids     = array_map(fn (int $i): string => "jid-$i", range(1, 10));
 
         foreach ($jids as $jid) {
             $queue->put(TestWorkerImpl::class, $jid, $testData);
@@ -62,7 +62,7 @@ class QueueTest extends QlessTest
     {
         $queue    = new Qless\Queue('testQueue', $this->client);
         $testData = ['performMethod' => 'myPerformMethod', 'payload' => 'otherData'];
-        $jids     = array_map(fn ($i) => "jid-$i", range(1, 10));
+        $jids     = array_map(fn (int $i): string => "jid-$i", range(1, 10));
 
         foreach ($jids as $jid) {
             $queue->put(TestWorkerImpl::class, $jid, $testData);
@@ -78,7 +78,7 @@ class QueueTest extends QlessTest
     {
         $queue    = new Qless\Queue('testQueue', $this->client);
         $testData = ['performMethod' => 'myPerformMethod', 'payload' => 'otherData'];
-        $jids     = array_map(fn ($i) => "jid-$i", range(1, 10));
+        $jids     = array_map(fn (int $i): string => "jid-$i", range(1, 10));
 
         foreach ($jids as $k => $jid) {
             $queue->put(TestWorkerImpl::class, $jid, $testData, 0, 5, true, $k);

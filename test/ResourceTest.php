@@ -96,7 +96,7 @@ class ResourceTest extends QlessTest
         $this->assertEquals(['j-2'], $p);
     }
 
-    private function put($jid, $res): void
+    private function put(string $jid, array $res): void
     {
         $res = json_encode($res, JSON_UNESCAPED_SLASHES);
         $this->client->put(

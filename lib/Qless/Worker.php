@@ -14,72 +14,33 @@ class Worker
     /**
      * @var Queue[]
      */
-    private $queues = [];
+    private array $queues = [];
 
-    /**
-     * @var int
-     */
-    private $interval;
+    private bool $shutdown = false;
 
-    /**
-     * @var Client
-     */
-    private $client;
+    private ?int $childPID = null;
 
-    /**
-     * @var bool
-     */
-    private $shutdown = false;
+    private ?int $watchdogPID = null;
 
-    /**
-     * @var string
-     */
-    private $workerName;
+    private int $childProcesses = 0;
 
-    /**
-     * @var int|null
-     */
-    private $childPID;
+    private ?string $jobPerformClass = null;
 
-    /**
-     * @var int|null
-     */
-    private $watchdogPID;
+    private bool $paused = false;
 
-    /**
-     * @var int
-     */
-    private $childProcesses = 0;
-
-    /**
-     * @var string
-     */
-    private $jobPerformClass;
-
-    /**
-     * @var bool
-     */
-    private $paused = false;
-
-    /**
-     * @var string
-     */
-    private $who = 'master';
+    private string $who = 'master';
 
     /**
      * @var array<string, mixed>
      */
-    private $logCtx;
+    private ?array $logCtx = null;
 
     /**
      * @var \Socket[]
      */
     private $sockets = [];
 
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
+    private \Psr\Log\NullLogger|\Psr\Log\LoggerInterface $logger;
 
     /**
      * @var Job|null
@@ -89,11 +50,8 @@ class Worker
     /**
      * @param string[] $queues
      */
-    public function __construct(string $name, array $queues, Client $client, int $interval = 60)
+    public function __construct(private readonly string $workerName, array $queues, private readonly Client $client, private readonly int $interval = 60)
     {
-        $this->workerName = $name;
-        $this->client     = $client;
-        $this->interval   = $interval;
         foreach ($queues as $queue) {
             $this->queues[] = $this->client->getQueue($queue);
         }
@@ -121,7 +79,7 @@ class Worker
     /**
      * @var array<int, string>
      */
-    private static $ERROR_CODES = [
+    private static array $ERROR_CODES = [
         E_ERROR         => 'E_ERROR',
         E_CORE_ERROR    => 'E_CORE_ERROR',
         E_COMPILE_ERROR => 'E_COMPILE_ERROR',
@@ -304,7 +262,7 @@ class Worker
      *
      * @return int PID if master or 0 if child
      */
-    private function fork(&$socket)
+    private function fork(&$socket): int
     {
         $pair = [];
         if (socket_create_pair(AF_UNIX, SOCK_STREAM, 0, $pair) === false) {
@@ -356,10 +314,8 @@ class Worker
 
     /**
      * @param \Socket $socket
-     *
-     * @return null|string
      */
-    private function readErrorFromSocket($socket)
+    private function readErrorFromSocket($socket): ?string
     {
         $error_info = '';
         while (!empty($res = socket_read($socket, 8192))) {
@@ -374,13 +330,11 @@ class Worker
     }
 
     /**
-     * @param int $PID
-     * @param int $child_type
-     * @param int $exitStatus
-     *
-     * @return bool|string false if exit status indicates success; otherwise, a string containing the error messages
+     * @param  int          $PID
+     * @param  int          $exitStatus
+     * @return false|string false if exit status indicates success; otherwise, a string containing the error messages
      */
-    private function handleProcessExitStatus($PID, $child_type, $exitStatus)
+    private function handleProcessExitStatus(?int $PID, int $child_type, int|bool $exitStatus): false|string
     {
         $child_type = $child_type === self::PROCESS_TYPE_JOB ? 'child' : 'watchdog';
 
@@ -444,10 +398,8 @@ class Worker
 
     /**
      * @param int $status
-     *
-     * @return bool
      */
-    private function childProcessStatus($status)
+    private function childProcessStatus($status): bool
     {
         switch (true) {
             case pcntl_wifexited($status):
@@ -545,10 +497,8 @@ class Worker
 
     /**
      * @param int $status
-     *
-     * @return bool
      */
-    private function watchdogProcessStatus($status)
+    private function watchdogProcessStatus($status): bool
     {
         switch (true) {
             case pcntl_wifexited($status):
@@ -656,7 +606,7 @@ function pcntl_sig_name(int $sig_no): string
     static $pcntl_consts;
     if (!isset($pcntl_consts)) {
         $a            = get_defined_constants(true)['pcntl'];
-        $f            = array_filter(array_keys($a), fn ($k) => str_starts_with($k, 'SIG') && !str_contains($k, 'SIG_'));
+        $f            = array_filter(array_keys($a), fn (string $k): bool => str_starts_with($k, 'SIG') && !str_contains($k, 'SIG_'));
         $pcntl_consts = array_flip(array_intersect_key($a, array_flip($f)));
         unset($a, $f);
     }

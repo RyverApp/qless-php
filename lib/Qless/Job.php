@@ -15,11 +15,6 @@ class Job
     private $data;
 
     /**
-     * @var Client
-     */
-    private $client;
-
-    /**
      * @var string
      */
     private $queue_name;
@@ -34,10 +29,7 @@ class Job
      */
     private $worker_name;
 
-    /**
-     * @var mixed
-     */
-    private $instance;
+    private ?object $instance = null;
 
     /**
      * @var float
@@ -57,14 +49,13 @@ class Job
     /**
      * @var array<string, mixed>
      */
-    private $job_data;
+    private array $job_data;
 
     /**
      * @param array<string, mixed> $job_data
      */
-    public function __construct(Client $client, $job_data)
+    public function __construct(private readonly Client $client, array $job_data)
     {
-        $this->client      = $client;
         $this->jid         = $job_data['jid'];
         $this->klass_name  = $job_data['klass'];
         $this->queue_name  = $job_data['queue'];
@@ -77,12 +68,9 @@ class Job
     }
 
     /**
-     * @param Client               $client
      * @param array<string, mixed> $job_data
-     *
-     * @return Job
      */
-    public static function fromJobData(Client $client, $job_data)
+    public static function fromJobData(Client $client, $job_data): Job
     {
         return new Job($client, $job_data);
     }
@@ -154,10 +142,8 @@ class Job
 
     /**
      * Returns the throttle interval for this job
-     *
-     * @return float
      */
-    public function getInterval()
+    public function getInterval(): float
     {
         return (float)$this->job_data['interval'];
     }
@@ -307,7 +293,7 @@ class Job
      *
      * @return string
      */
-    public function requeue($opts = [])
+    public function requeue(array $opts = [])
     {
         $jsonData = json_encode($opts['data'] ?? $this->data, JSON_UNESCAPED_SLASHES);
 
@@ -381,7 +367,7 @@ class Job
     public function cancel($dependents = false)
     {
         if ($dependents && !empty($this->job_data['dependents'])) {
-            return call_user_func_array([$this->client, 'cancel'], array_merge([$this->jid], $this->job_data['dependents']));
+            return call_user_func_array($this->client->cancel(...), array_merge([$this->jid], $this->job_data['dependents']));
         }
 
         return $this->client->cancel($this->jid);

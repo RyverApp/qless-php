@@ -5,32 +5,18 @@ namespace Qless;
 class Resource
 {
     /**
-     * @var Client
-     */
-    private $client;
-
-    /**
-     * @var string
-     */
-    private $name;
-
-    /**
      * @var int|null
      */
     private $max;
 
-    public function __construct(Client $client, string $name)
+    public function __construct(private readonly Client $client, private readonly string $name)
     {
-        $this->client = $client;
-        $this->name   = $name;
     }
 
     /**
      * Returns true if this resource exists
-     *
-     * @return bool
      */
-    public function exists()
+    public function exists(): bool
     {
         return $this->client->lua->run('resource.exists', [$this->name]) === 1;
     }
@@ -50,7 +36,7 @@ class Resource
      *
      * @return string[]
      */
-    public function getLocks()
+    public function getLocks(): mixed
     {
         $data = $this->client->lua->run('resource.locks', [$this->name]);
 
@@ -72,7 +58,7 @@ class Resource
      *
      * @return string[]
      */
-    public function getPending()
+    public function getPending(): mixed
     {
         $data = $this->client->lua->run('resource.pending', [$this->name]);
 
@@ -84,7 +70,7 @@ class Resource
      *
      * @return bool true if resource was deleted
      */
-    public function delete()
+    public function delete(): bool
     {
         return $this->client->lua->run('resource.unset', [$this->name]) === 1;
     }
@@ -105,9 +91,7 @@ class Resource
      */
     public function getMax()
     {
-        if (!isset($this->max)) {
-            $this->max = $this->client->lua->run('resource.get', [$this->name]);
-        }
+        $this->max ??= $this->client->lua->run('resource.get', [$this->name]);
         return $this->max;
     }
 }

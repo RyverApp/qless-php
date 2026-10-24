@@ -48,12 +48,9 @@ class Client
     /**
      * @var array{host: string, port: int, db: int}
      */
-    private $redis;
+    private array $redis;
 
-    /**
-     * @var Jobs
-     */
-    private $_jobs;
+    private readonly Jobs $_jobs;
 
     public function __construct(string $host = 'localhost', int $port = 6379, int $db = 0)
     {
@@ -100,10 +97,8 @@ class Client
      * Create a new listener
      *
      * @param string[] $channels
-     *
-     * @return Listener
      */
-    public function createListener($channels)
+    public function createListener($channels): Listener
     {
         return new Listener($this->redis, $channels);
     }
@@ -118,10 +113,7 @@ class Client
         return $this->lua->run($command, $arguments);
     }
 
-    /**
-     * @return mixed
-     */
-    public function __get(string $name)
+    public function __get(string $name): mixed
     {
         if ($name === 'jobs') {
             return $this->_jobs;
@@ -130,10 +122,7 @@ class Client
         return null;
     }
 
-    /**
-     * @param mixed $value
-     */
-    public function __set(string $name, $value): void
+    public function __set(string $name, mixed $value): void
     {
     }
 
@@ -159,10 +148,8 @@ class Client
      * Returns
      *
      * @param string $name name of queue
-     *
-     * @return Queue
      */
-    public function getQueue($name)
+    public function getQueue($name): Queue
     {
         return new Queue($name, $this);
     }
@@ -171,20 +158,16 @@ class Client
      * APIs for manipulating a resource
      *
      * @param string $name
-     *
-     * @return Resource
      */
-    public function getResource($name)
+    public function getResource($name): Resource
     {
         return new Resource($this, $name);
     }
 
     /**
      * Returns APIs for querying information about jobs
-     *
-     * @return Jobs
      */
-    public function getJobs()
+    public function getJobs(): Jobs
     {
         return $this->_jobs;
     }

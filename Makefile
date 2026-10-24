@@ -12,11 +12,13 @@ upgrade:
 
 .PHONY: format
 format:
+	vendor/bin/rector process
 	vendor/bin/php-cs-fixer fix
 
 .PHONY: check
 check:
 	composer validate --strict
+	vendor/bin/rector process --dry-run
 	vendor/bin/php-cs-fixer fix --dry-run --diff
 	vendor/bin/phpstan analyse
 

@@ -7,10 +7,9 @@ class Qless
     public const VERSION = '1.0.0';
 
     /**
-     * @return int
      * @throws \RuntimeException
      */
-    public static function fork()
+    public static function fork(): int
     {
         if (!function_exists('pcntl_fork')) {
             return -1;
@@ -24,10 +23,7 @@ class Qless
         return $pid;
     }
 
-    /**
-     * @return string
-     */
-    public static function guidv4()
+    public static function guidv4(): string
     {
         $data = openssl_random_pseudo_bytes(16);
 

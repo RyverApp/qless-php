@@ -13,19 +13,13 @@ class JobIterator implements \IteratorAggregate, \Countable
     private $pager;
 
     /**
-     * @var Client
-     */
-    private $client;
-
-    /**
      * @var array<string, mixed>
      */
     private $page;
 
-    public function __construct(callable $pager, Client $client)
+    public function __construct(callable $pager, private readonly Client $client)
     {
-        $this->pager  = $pager;
-        $this->client = $client;
+        $this->pager = $pager;
     }
 
     public function getIterator(): \Generator

@@ -24,7 +24,8 @@
         "phpstan/phpstan": "~2.2",
         "phpunit/phpunit": "~11.5",
         "symfony/http-client": "~7.4",
-        "testcontainers/testcontainers": "~1.2"
+        "testcontainers/testcontainers": "~1.2",
+        "rector/rector": "~2.7"
     },
     "autoload": {
         "psr-4": {

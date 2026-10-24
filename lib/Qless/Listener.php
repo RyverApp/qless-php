@@ -4,32 +4,20 @@ namespace Qless;
 
 class Listener
 {
-    /**
-     * @var \Redis
-     */
-    private $redis;
-
-    /**
-     * @var string[]
-     */
-    private $channels;
+    private readonly \Redis $redis;
 
     /**
      * @param array<string, mixed> $redisConfig
      * @param string[]             $channels
      */
-    public function __construct(array $redisConfig, array $channels)
+    public function __construct(array $redisConfig, private readonly array $channels)
     {
         $this->redis = new \Redis();
         $this->redis->connect($redisConfig['host'], $redisConfig['port']);
-
-        $this->channels = $channels;
     }
 
     /**
      * Wait for messages
-     *
-     * @param callable $callback
      */
     public function messages(callable $callback): void
     {

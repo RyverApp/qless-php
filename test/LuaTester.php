@@ -1,6 +1,8 @@
 <?php
 
-class LuaTester extends \Qless\Lua
+use Qless\Lua;
+
+class LuaTester extends Lua
 {
     public $time = 0;
 
