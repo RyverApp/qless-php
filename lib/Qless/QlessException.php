@@ -8,10 +8,15 @@ namespace Qless;
 class QlessException extends \Exception
 {
     /**
-     * @var string
+     * @var string|null
      */
     private $area;
 
+    /**
+     * @param string      $message
+     * @param string|null $area
+     * @param int         $code
+     */
     public function __construct($message, $area = null, $code = 0, ?\Exception $previous = null)
     {
         parent::__construct($message, $code, $previous);
@@ -46,6 +51,9 @@ class QlessException extends \Exception
         }
     }
 
+    /**
+     * @return string|null
+     */
     public function getArea()
     {
         return $this->area;

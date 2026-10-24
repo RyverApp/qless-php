@@ -55,10 +55,13 @@ class Job
     private $tags;
 
     /**
-     * @var array
+     * @var array<string, mixed>
      */
     private $job_data;
 
+    /**
+     * @param array<string, mixed> $job_data
+     */
     public function __construct(Client $client, $job_data)
     {
         $this->client      = $client;
@@ -74,8 +77,8 @@ class Job
     }
 
     /**
-     * @param Client $client
-     * @param array  $job_data
+     * @param Client               $client
+     * @param array<string, mixed> $job_data
      *
      * @return Job
      */
@@ -84,7 +87,7 @@ class Job
         return new Job($client, $job_data);
     }
 
-    public function getId()
+    public function getId(): string
     {
         return $this->jid;
     }
@@ -202,7 +205,7 @@ class Job
     /**
      * Get the job history
      *
-     * @return array
+     * @return array<int, array<string, mixed>>
      */
     public function getHistory()
     {
@@ -256,7 +259,7 @@ class Job
     /**
      * Returns the failure information for this job
      *
-     * @return array
+     * @return array<string, mixed>
      */
     public function getFailureInfo()
     {
@@ -300,7 +303,7 @@ class Job
      * * string[] depends   replacement list of JIDs this job is dependent on
      * * string[] resources replacement list of resource IDs required before this job can be processed
      *
-     * @param array $opts optional values
+     * @param array<string, mixed> $opts optional values
      *
      * @return string
      */

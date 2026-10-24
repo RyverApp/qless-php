@@ -32,6 +32,9 @@ class Lua
      */
     protected $sha;
 
+    /**
+     * @param array{host: string, port: int, db: int} $redis
+     */
     public function __construct($redis)
     {
         $this->redisHost = $redis['host'];
@@ -43,6 +46,12 @@ class Lua
         $this->redisCli->select($this->redisDb);
     }
 
+    /**
+     * @param string       $command
+     * @param array<mixed> $args
+     *
+     * @return mixed
+     */
     public function run($command, $args)
     {
         if (empty($this->sha)) {

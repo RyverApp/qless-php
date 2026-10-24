@@ -2,6 +2,9 @@
 
 namespace Qless;
 
+/**
+ * @implements \IteratorAggregate<string, Job>
+ */
 class JobIterator implements \IteratorAggregate, \Countable
 {
     /**
@@ -15,7 +18,7 @@ class JobIterator implements \IteratorAggregate, \Countable
     private $client;
 
     /**
-     * @var array
+     * @var array<string, mixed>
      */
     private $page;
 

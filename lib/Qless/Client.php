@@ -46,16 +46,16 @@ class Client
     public $config;
 
     /**
-     * @var array
+     * @var array{host: string, port: int, db: int}
      */
-    private $redis = [];
+    private $redis;
 
     /**
      * @var Jobs
      */
     private $_jobs;
 
-    public function __construct($host = 'localhost', $port = 6379, $db = 0)
+    public function __construct(string $host = 'localhost', int $port = 6379, int $db = 0)
     {
         $this->redis['host'] = $host;
         $this->redis['port'] = $port;
@@ -108,12 +108,20 @@ class Client
         return new Listener($this->redis, $channels);
     }
 
-    public function __call($command, $arguments)
+    /**
+     * @param array<mixed> $arguments
+     *
+     * @return mixed
+     */
+    public function __call(string $command, array $arguments)
     {
         return $this->lua->run($command, $arguments);
     }
 
-    public function __get($name)
+    /**
+     * @return mixed
+     */
+    public function __get(string $name)
     {
         if ($name === 'jobs') {
             return $this->_jobs;
@@ -122,11 +130,14 @@ class Client
         return null;
     }
 
-    public function __set($name, $value): void
+    /**
+     * @param mixed $value
+     */
+    public function __set(string $name, $value): void
     {
     }
 
-    public function __isset($name)
+    public function __isset(string $name): bool
     {
         return $name === 'jobs';
     }
@@ -134,8 +145,8 @@ class Client
     /**
      * Call a specific qless command
      *
-     * @param string $command
-     * @param array  $arguments ...
+     * @param string       $command
+     * @param array<mixed> $arguments ...
      *
      * @return mixed
      */

@@ -14,7 +14,11 @@ class Listener
      */
     private $channels;
 
-    public function __construct($redisConfig, $channels)
+    /**
+     * @param array<string, mixed> $redisConfig
+     * @param string[]             $channels
+     */
+    public function __construct(array $redisConfig, array $channels)
     {
         $this->redis = new \Redis();
         $this->redis->connect($redisConfig['host'], $redisConfig['port']);

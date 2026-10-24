@@ -24,6 +24,9 @@ class Qless
         return $pid;
     }
 
+    /**
+     * @return string
+     */
     public static function guidv4()
     {
         $data = openssl_random_pseudo_bytes(16);

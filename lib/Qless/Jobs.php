@@ -2,6 +2,9 @@
 
 namespace Qless;
 
+/**
+ * @implements \ArrayAccess<string, Job>
+ */
 class Jobs implements \ArrayAccess
 {
     /**

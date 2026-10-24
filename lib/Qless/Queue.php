@@ -17,6 +17,9 @@ class Queue
      */
     private $name;
 
+    /**
+     * @param string $name
+     */
     public function __construct($name, Client $client)
     {
         $this->client = $client;
@@ -169,7 +172,7 @@ class Queue
         return $this->client->length($this->name);
     }
 
-    public function __get($name)
+    public function __get(string $name): int
     {
         switch ($name) {
             case 'heartbeat':
@@ -182,7 +185,10 @@ class Queue
         }
     }
 
-    public function __set($name, $value): void
+    /**
+     * @param mixed $value
+     */
+    public function __set(string $name, $value): void
     {
         switch ($name) {
             case 'heartbeat':
@@ -199,7 +205,7 @@ class Queue
         }
     }
 
-    public function __unset($name): void
+    public function __unset(string $name): void
     {
         switch ($name) {
             case 'heartbeat':
@@ -217,7 +223,7 @@ class Queue
      *
      * @param int $date The date for which stats to retrieve as a unix timestamp
      *
-     * @return array
+     * @return array<string, mixed>
      */
     public function stats($date = null)
     {

@@ -16,14 +16,14 @@ class TestWorkerImpl
         // jobId = instance_id:job_name:user_id:additional if always unique
     }
 
-    public function myThrowMethod($job): void
+    public function myThrowMethod(Qless\Job $job): void
     {
         echo "in throw job.\n";
         sleep(15);
         throw new \Exception('job exception message.');
     }
 
-    public function exitMethod($job): void
+    public function exitMethod(Qless\Job $job): void
     {
         sleep(5);
         exit(1);

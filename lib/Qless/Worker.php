@@ -67,7 +67,7 @@ class Worker
     private $who = 'master';
 
     /**
-     * @var array
+     * @var array<string, mixed>
      */
     private $logCtx;
 
@@ -86,7 +86,10 @@ class Worker
      */
     private $job;
 
-    public function __construct($name, $queues, Client $client, $interval = 60)
+    /**
+     * @param string[] $queues
+     */
+    public function __construct(string $name, array $queues, Client $client, int $interval = 60)
     {
         $this->workerName = $name;
         $this->client     = $client;
@@ -102,7 +105,7 @@ class Worker
         $this->logger = $logger;
     }
 
-    public function registerJobPerformHandler($klass): void
+    public function registerJobPerformHandler(string $klass): void
     {
         if (!class_exists($klass)) {
             throw new \Exception("Could not find job perform class $klass");
@@ -115,6 +118,9 @@ class Worker
         $this->jobPerformClass = $klass;
     }
 
+    /**
+     * @var array<int, string>
+     */
     private static $ERROR_CODES = [
         E_ERROR         => 'E_ERROR',
         E_CORE_ERROR    => 'E_CORE_ERROR',
@@ -147,7 +153,7 @@ class Worker
 
             if ($did_work) {
                 $queues = implode(',', $this->queues);
-                $now    = strftime('%F %T');
+                $now    = date('Y-m-d H:i:s');
                 $this->updateProcLine("Waiting for $queues with interval $this->interval since $now");
                 $this->logger->debug("[$this->who] waiting for work", $this->logCtx);
                 $did_work = false;
@@ -171,7 +177,7 @@ class Worker
             $this->watchdogStart();
 
             // Parent process, sit and wait
-            $now = strftime('%F %T');
+            $now = date('Y-m-d H:i:s');
             $this->updateProcLine("Forked $this->childPID at $now");
             $this->logger->info("[$this->who] forked child", $this->logCtx);
 
@@ -402,7 +408,7 @@ class Worker
         $this->clearSigHandlers();
 
         $jid          = $this->job->getId();
-        $now          = strftime('%F %T');
+        $now          = date('Y-m-d H:i:s');
         $this->who    = "child:$this->workerName";
         $this->logCtx = ['job_identifier' => $jid, 'job_queue' => $this->job->getQueueName()];
         $this->updateProcLine("Processing $jid since $now");
@@ -494,7 +500,7 @@ class Worker
         $this->clearSigHandlers();
 
         $jid          = $this->job->getId();
-        $now          = strftime('%F %T');
+        $now          = date('Y-m-d H:i:s');
         $this->who    = "watchdog:$this->workerName";
         $this->logCtx = ['job_identifier' => $jid, 'job_queue' => $this->job->getQueueName()];
         $this->updateProcLine("Watching events for $jid since $now");
@@ -638,14 +644,14 @@ class Worker
         $this->watchdogKill();
     }
 
-    private function updateProcLine($status): void
+    private function updateProcLine(string $status): void
     {
         $version = Qless::VERSION;
         cli_set_process_title("qless-$version: $status");
     }
 }
 
-function pcntl_sig_name($sig_no)
+function pcntl_sig_name(int $sig_no): string
 {
     static $pcntl_consts;
     if (!isset($pcntl_consts)) {

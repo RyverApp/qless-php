@@ -19,7 +19,7 @@ class Resource
      */
     private $max;
 
-    public function __construct(Client $client, $name)
+    public function __construct(Client $client, string $name)
     {
         $this->client = $client;
         $this->name   = $name;
