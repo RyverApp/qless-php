@@ -1,11 +1,12 @@
 {
-    "name": "contatta/qless-php",
+    "name": "ryverapp/qless-php",
     "description": "qless client implementation for PHP",
     "license": "MIT",
+    "type": "library",
     "authors": [
         {
-            "name": "contatta",
-            "email": "dev@contatta.com"
+            "name": "Nathan Baulch",
+            "email": "nathan@ryver.com"
         }
     ],
     "require": {
