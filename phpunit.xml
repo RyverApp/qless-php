@@ -11,7 +11,7 @@
            tests/ folder: phpunit -c <filename> ...
            Example: phpunit -c mysqlconf.xml AllTests
 -->
-<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" backupGlobals="false" colors="true" processIsolation="false" stopOnFailure="false" xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/11.5/phpunit.xsd" cacheDirectory=".phpunit.cache" backupStaticProperties="false">
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" bootstrap="./test/bootstrap.php" backupGlobals="false" colors="true" processIsolation="false" stopOnFailure="false" xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/11.5/phpunit.xsd" cacheDirectory=".phpunit.cache" backupStaticProperties="false">
   <testsuites>
     <testsuite name="qless core">
       <directory>./test</directory>
@@ -27,8 +27,6 @@
     </exclude>
   </groups>
   <php>
-    <env name="REDIS_HOST" value="localhost"/>
-    <env name="REDIS_PORT" value="6379"/>
     <env name="REDIS_DB" value="0"/>
   </php>
   <source/>

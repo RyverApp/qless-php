@@ -21,7 +21,9 @@
     "require-dev": {
         "friendsofphp/php-cs-fixer": "~3.95",
         "phpstan/phpstan": "~2.2",
-        "phpunit/phpunit": "~11.5"
+        "phpunit/phpunit": "~11.5",
+        "symfony/http-client": "~7.4",
+        "testcontainers/testcontainers": "~1.2"
     },
     "autoload": {
         "psr-4": {
@@ -29,6 +31,9 @@
         }
     },
     "config": {
+        "allow-plugins": {
+            "php-http/discovery": true
+        },
         "platform": {
             "php": "8.2"
         }
